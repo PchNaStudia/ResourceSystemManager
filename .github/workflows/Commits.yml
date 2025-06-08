@@ -1,0 +1,35 @@
+name: Commit messages.
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  check-commit-message:
+    runs-on: ubuntu-latest
+    container:
+      image: alpine:3
+    steps:
+      - name: Install Git
+        run: |
+          apk add --no-cache git
+
+      - name: Configure Git
+        run: |
+          git config --global --add safe.directory /__w/ResourceSystemManager/ResourceSystemManager
+
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check commit messages
+        run: |
+          commits=$(git log --format=%B ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }})
+
+          echo "$commits" | while read -r message; do
+            if ! echo "$message" | grep -Eq "^(RSM-[0-9]+|TRIVIAL|DOC|WORKFLOW): .+"; then
+              echo "Invalid commit message format: $message"
+              echo "Commit messages must match pattern: (RSM-\d+)|(TRIVIAL)|(DOC)|(WORKFLOW): ..."
+              exit 1
+            fi
+          done
