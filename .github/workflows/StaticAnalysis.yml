@@ -1,0 +1,36 @@
+name: Check format and build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  check-and-build:
+    runs-on: ubuntu-latest
+    container:
+      image: node:22.16-alpine
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install pnpm
+        continue-on-error: false
+        if: success()
+        run: npm install -g pnpm@10.11.0
+
+      - name: Install dependencies
+        continue-on-error: false
+        if: success()
+        run: pnpm install --frozen-lockfile
+
+      - name: Check formatting
+        continue-on-error: false
+        if: success()
+        run: pnpm format:check || (echo "Formatting check failed. Run 'pnpm format:fix' to fix" && exit 1)
+
+      - name: Build
+        continue-on-error: false
+        if: success()
+        run: pnpm build
