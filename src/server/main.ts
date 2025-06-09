@@ -1,11 +1,14 @@
 import express from "express";
 import ViteExpress from "vite-express";
 import env from "./env";
+import apiRouter from "./api";
 
 const app = express();
 
-app.get("/hello", (_, res) => {
-  res.send("Hello Vite + React + TypeScript!");
+app.use("/api", apiRouter);
+
+app.get("/", (_, res) => {
+  res.redirect("/web");
 });
 
 ViteExpress.config({

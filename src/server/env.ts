@@ -22,6 +22,9 @@ const envSchema = z.object({
     .string()
     .refine((base) => base.startsWith("/"), "Invalid base pathname")
     .default("/web"),
+  GOOGLE_CLIENT_ID: z.string().min(1, "Google Client ID is required"),
+  GOOGLE_CLIENT_SECRET: z.string().min(1, "Google Client Secret is required"),
+  SECRET: z.string().min(1, "Secret is required"),
 });
 
 const env = envSchema.parse(process.env);
