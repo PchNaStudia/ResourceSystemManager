@@ -24,7 +24,7 @@ jobs:
 
       - name: Check commit messages
         run: |
-          commit_hashes=$(git rev-list 13a23017f12a1d46b586d1950723df92ace8b04e..849e478db01cb3eb9d08ac6a1f2106792e7bf2ea)
+          commit_hashes=$(git rev-list ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }})
 
           for hash in $commit_hashes; do
             subject=$(git log -1 --format=%s "$hash")
