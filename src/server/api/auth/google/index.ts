@@ -3,6 +3,7 @@ import { z } from "zod";
 import env from "../../../env";
 import { createRemoteJWKSet, jwtVerify } from "jose";
 import crypto from "crypto";
+import { UserType } from "@common/DbTypesPolyfill";
 
 const googleConfigurationValidator = z
   .object({
@@ -63,7 +64,7 @@ function renderClientSideRedirect(url: string) {
 </html>`;
 }
 
-googleAuthRouter.get("/login", async (req, res) => {
+googleAuthRouter.get("/login", (req, res) => {
   const state = crypto.randomBytes(16).toString("base64url");
   const nonce = crypto.randomUUID().toString();
   stateToNonce[state] = nonce;
@@ -127,11 +128,10 @@ googleAuthRouter.get("/callback", async (req, res) => {
   }
   // TODO: Get user from database or create new one by 'sub' (subject) from payload
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const user = {
-    id: 1,
-    FullName: payload.name,
-    email: payload.email,
-    GoogleId: payload.sub,
+  const user: UserType = {
+    id: "1",
+    fullName: payload.name as string,
+    email: payload.email as `${string}@${string}.${string}`,
   };
   // TODO: Create session in database or key value store (tbd)
   const sessionId = crypto.randomUUID().toString();
@@ -147,9 +147,9 @@ googleAuthRouter.get("/callback", async (req, res) => {
   );
 });
 
-googleAuthRouter.get("/upgrade", async (req, res) => {
+googleAuthRouter.get("/upgrade", (req, res) => {
   console.log(req.cookies);
-  const { sessionId } = req.cookies;
+  const { sessionId } = req.cookies as { sessionId: string };
   if (!sessionId) {
     res.status(401).json({ error: "Unauthorized" });
     return;

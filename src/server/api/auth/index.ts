@@ -12,9 +12,9 @@ authRouter.get("/logout", (_, res) => {
 authRouter.get("/session", (req, res) => {
   // TODO: Real implementation
   let user: UserType | null = null;
-  const { sessionId } = req.cookies;
+  const { sessionId } = req.cookies as { sessionId: string };
   if (sessionId) {
-    user = { id: "1", FullName: "Name", email: "Name@gmail.com" };
+    user = { id: "1", fullName: "Name", email: "Name@gmail.com" };
   }
   res.json(user);
 });

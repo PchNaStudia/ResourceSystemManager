@@ -35,8 +35,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     queryKey: ["getSession"],
     queryFn: async () => {
       const res = await fetch("/api/auth/session");
-      const json = await res.json();
-      return json as UserType | null;
+      return (await res.json()) as UserType | null;
     },
   });
   const login = () => {
