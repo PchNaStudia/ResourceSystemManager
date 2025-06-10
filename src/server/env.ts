@@ -2,9 +2,9 @@ import { z } from "zod";
 import dotenv from "dotenv";
 dotenv.config();
 
-type NodeEnv = "development" | "production";
+type NodeEnvType = "development" | "production";
 
-function isNodeEnv(env: string): env is NodeEnv {
+function isNodeEnv(env: string): env is NodeEnvType {
   return env === "development" || env === "production";
 }
 
