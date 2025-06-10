@@ -64,7 +64,7 @@ function renderClientSideRedirect(url: string) {
 }
 
 googleAuthRouter.get("/login", async (req, res) => {
-  const state = crypto.randomBytes(16).toString("base64");
+  const state = crypto.randomBytes(16).toString("base64url");
   const nonce = crypto.randomUUID().toString();
   stateToNonce[state] = nonce;
   res.redirect(
