@@ -1,22 +1,21 @@
 import { Router } from "express";
 import googleAuthRouter from "./google";
-import { UserType } from "@common/DbTypesPolyfill";
+import sessionManager from "@server/SessionManager";
 
 const authRouter = Router();
 
-authRouter.get("/logout", (_, res) => {
-  res.clearCookie("sessionId");
+authRouter.get("/logout", (req, res) => {
+  const { sessionId } = req.cookies as { sessionId: string | undefined };
+  if (sessionId) {
+    sessionManager.removeSession(sessionId);
+    res.clearCookie("sessionId");
+  }
   res.redirect("/");
 });
 
 authRouter.get("/session", (req, res) => {
-  // TODO: Real implementation
-  let user: UserType | null = null;
-  const { sessionId } = req.cookies as { sessionId: string };
-  if (sessionId) {
-    user = { id: "1", fullName: "Name", email: "Name@gmail.com" };
-  }
-  res.json(user);
+  const { sessionId } = req.cookies as { sessionId: string | undefined };
+  res.json(sessionId ? sessionManager.getSessionUser(sessionId) : null);
 });
 
 authRouter.use("/google", googleAuthRouter);
