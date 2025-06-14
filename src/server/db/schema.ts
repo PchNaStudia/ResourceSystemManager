@@ -1,6 +1,11 @@
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { sql } from "drizzle-orm";
 import { primaryKey } from "drizzle-orm/sqlite-core";
+import {
+  createInsertSchema,
+  createSelectSchema,
+  createUpdateSchema,
+} from "drizzle-zod";
 
 export const usersTable = sqliteTable("users_table", {
   id: text().notNull().primaryKey(),
@@ -40,3 +45,21 @@ export const resourcesAccessTable = sqliteTable(
   },
   (table) => [primaryKey({ columns: [table.userId, table.groupId] })],
 );
+
+export const validators = {
+  select: {
+    users: createSelectSchema(usersTable),
+    resourcesGroups: createSelectSchema(resourcesGroupsTable),
+    resourcesAccess: createSelectSchema(resourcesAccessTable),
+  },
+  update: {
+    users: createUpdateSchema(usersTable),
+    resourcesGroups: createUpdateSchema(resourcesGroupsTable),
+    resourcesAccess: createUpdateSchema(resourcesAccessTable),
+  },
+  insert: {
+    users: createInsertSchema(usersTable),
+    resourcesGroups: createInsertSchema(resourcesGroupsTable),
+    resourcesAccess: createInsertSchema(resourcesAccessTable),
+  },
+};
