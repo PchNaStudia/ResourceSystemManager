@@ -12,8 +12,6 @@ export const googleIdTokenPayloadSchema = z
     nonce: z.string().min(1),
     name: z.string().min(1),
     picture: z.string().url(),
-    given_name: z.string().min(1),
-    family_name: z.string().min(1),
   })
   .strip();
 
@@ -32,8 +30,7 @@ export class SessionManager {
     )[0];
     const userPayloadData = {
       id: payload.sub,
-      firstName: payload.given_name,
-      lastName: payload.family_name,
+      name: payload.name,
       email: payload.email,
       picture: payload.picture,
     };
@@ -42,8 +39,7 @@ export class SessionManager {
     } else if (
       user.email !== userPayloadData.email ||
       user.picture !== userPayloadData.picture ||
-      user.firstName !== userPayloadData.firstName ||
-      user.lastName !== userPayloadData.lastName
+      user.name !== userPayloadData.name
     ) {
       user = (
         await db

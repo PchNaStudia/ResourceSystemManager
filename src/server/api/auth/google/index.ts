@@ -42,6 +42,7 @@ async function verifyGoogleIdToken(idToken: string) {
       issuer: googleConfiguration.issuer,
       audience: env.GOOGLE_CLIENT_ID,
     });
+    console.log(payload);
     return googleIdTokenPayloadSchema.parse(payload);
   } catch (error) {
     console.error("Error verifying Google ID token:", error);

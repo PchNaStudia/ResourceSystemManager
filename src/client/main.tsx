@@ -4,15 +4,38 @@ import Routes from "./Routes";
 import Layout from "./Layout";
 import AuthProvider from "@client/AuthContext";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import ThemeModeProvider, { useThemeMode } from "@client/ThemeModeContext";
+import CssBaseline from "@mui/material/CssBaseline";
+import { GlobalStyles, ThemeProvider } from "@mui/material";
 
 const queryClient = new QueryClient();
+
+const ThemedLayout = () => {
+  const { theme } = useThemeMode();
+
+  return (
+    <ThemeProvider theme={theme}>
+      <GlobalStyles
+        styles={{
+          svg: {
+            color: theme.palette.text.primary,
+          },
+        }}
+      />
+      <CssBaseline/>
+      <Layout body={<Routes />} />
+    </ThemeProvider>
+  )
+}
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <Layout body={<Routes />} />
+        <ThemeModeProvider>
+          <ThemedLayout/>
+        </ThemeModeProvider>
       </AuthProvider>
     </QueryClientProvider>
-  </React.StrictMode>,
+  </React.StrictMode>
 );
