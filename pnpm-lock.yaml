@@ -13,9 +13,6 @@ importers:
       "@tanstack/react-query":
         specifier: ^5.80.6
         version: 5.80.6(react@19.1.0)
-      bindings:
-        specifier: ^1.5.0
-        version: 1.5.0
       cookie-parser:
         specifier: ^1.4.7
         version: 1.4.7
@@ -31,27 +28,12 @@ importers:
       drizzle-zod:
         specifier: ^0.8.2
         version: 0.8.2(drizzle-orm@0.44.2(@libsql/client@0.15.9)(@types/better-sqlite3@7.6.13)(better-sqlite3@11.10.0))(zod@3.25.62)
-      eslint:
-        specifier: ^9.28.0
-        version: 9.28.0
-      eslint-config-prettier:
-        specifier: ^10.1.5
-        version: 10.1.5(eslint@9.28.0)
-      eslint-plugin-react:
-        specifier: ^7.37.5
-        version: 7.37.5(eslint@9.28.0)
       express:
         specifier: ^5.1.0
         version: 5.1.0
       jose:
         specifier: ^6.0.11
         version: 6.0.11
-      lodash:
-        specifier: ^4.17.21
-        version: 4.17.21
-      prettier:
-        specifier: ^3.5.3
-        version: 3.5.3
       react:
         specifier: ^19.1.0
         version: 19.1.0
@@ -61,15 +43,6 @@ importers:
       react-router:
         specifier: ^7.6.2
         version: 7.6.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      tsx:
-        specifier: ^4.19.3
-        version: 4.20.1
-      typescript:
-        specifier: ^5.8.3
-        version: 5.8.3
-      typescript-eslint:
-        specifier: ^8.33.0
-        version: 8.34.0(eslint@9.28.0)(typescript@5.8.3)
       vite-express:
         specifier: "*"
         version: 0.21.1
@@ -83,9 +56,6 @@ importers:
       "@types/express":
         specifier: ^5.0.1
         version: 5.0.3
-      "@types/lodash":
-        specifier: ^4.17.17
-        version: 4.17.17
       "@types/node":
         specifier: ^22.15.2
         version: 22.15.31
@@ -101,9 +71,30 @@ importers:
       drizzle-kit:
         specifier: ^0.31.1
         version: 0.31.1
+      eslint:
+        specifier: ^9.28.0
+        version: 9.28.0
+      eslint-config-prettier:
+        specifier: ^10.1.5
+        version: 10.1.5(eslint@9.28.0)
+      eslint-plugin-react:
+        specifier: ^7.37.5
+        version: 7.37.5(eslint@9.28.0)
       nodemon:
         specifier: ^3.1.10
         version: 3.1.10
+      prettier:
+        specifier: ^3.5.3
+        version: 3.5.3
+      tsx:
+        specifier: ^4.19.3
+        version: 4.20.1
+      typescript:
+        specifier: ^5.8.3
+        version: 5.8.3
+      typescript-eslint:
+        specifier: ^8.33.0
+        version: 8.34.0(eslint@9.28.0)(typescript@5.8.3)
       vite:
         specifier: ^6.3.3
         version: 6.3.5(@types/node@22.15.31)(tsx@4.20.1)
@@ -1229,12 +1220,6 @@ packages:
     resolution:
       {
         integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==,
-      }
-
-  "@types/lodash@4.17.17":
-    resolution:
-      {
-        integrity: sha512-RRVJ+J3J+WmyOTqnz3PiBLA501eKwXl2noseKOrNo/6+XEHjTAxO4xHvxQB6QuNm+s4WRbn6rSiap8+EA+ykFQ==,
       }
 
   "@types/mime@1.3.5":
@@ -2930,12 +2915,6 @@ packages:
     resolution:
       {
         integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==,
-      }
-
-  lodash@4.17.21:
-    resolution:
-      {
-        integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==,
       }
 
   loose-envify@1.4.0:
@@ -4684,8 +4663,6 @@ snapshots:
 
   "@types/json-schema@7.0.15": {}
 
-  "@types/lodash@4.17.17": {}
-
   "@types/mime@1.3.5": {}
 
   "@types/node@22.15.31":
@@ -4931,6 +4908,7 @@ snapshots:
   bindings@1.5.0:
     dependencies:
       file-uri-to-path: 1.0.0
+    optional: true
 
   bl@4.1.0:
     dependencies:
@@ -5506,7 +5484,8 @@ snapshots:
     dependencies:
       flat-cache: 4.0.1
 
-  file-uri-to-path@1.0.0: {}
+  file-uri-to-path@1.0.0:
+    optional: true
 
   fill-range@7.1.1:
     dependencies:
@@ -5871,8 +5850,6 @@ snapshots:
       p-locate: 5.0.0
 
   lodash.merge@4.6.2: {}
-
-  lodash@4.17.21: {}
 
   loose-envify@1.4.0:
     dependencies:
