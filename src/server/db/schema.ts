@@ -9,8 +9,7 @@ import {
 
 export const usersTable = sqliteTable("users_table", {
   id: text().notNull().primaryKey(),
-  firstName: text().notNull(),
-  lastName: text().notNull(),
+  name: text().notNull(),
   email: text().notNull(),
   picture: text().notNull(),
   createdAt: integer({ mode: "timestamp" }).default(sql`CURRENT_TIMESTAMP`),

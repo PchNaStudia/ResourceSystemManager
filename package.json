@@ -18,7 +18,11 @@
     "db:push": "drizzle-kit push"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
     "@libsql/client": "^0.15.9",
+    "@mui/icons-material": "^7.1.1",
+    "@mui/material": "^7.1.1",
     "@tanstack/react-query": "^5.80.6",
     "cookie-parser": "^1.4.7",
     "cross-env": "^7.0.3",
@@ -31,6 +35,7 @@
     "react-dom": "^19.1.0",
     "react-router": "^7.6.2",
     "vite-express": "*",
+    "vite-plugin-svgr": "^4.3.0",
     "zod": "^3.25.46"
   },
   "devDependencies": {
