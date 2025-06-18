@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Outlet } from "react-router";
 import { useAuth } from "@client/AuthContext";
+import Homepage from "@client/pages/Homepage";
 
 const RouteAccessControl = () => {
   const { user, login } = useAuth();
@@ -16,7 +17,7 @@ const AppRoutes = () => {
     <BrowserRouter basename={import.meta.env.BASE_URL}>
       <Routes>
         {/*TODO: Move pages separate component*/}
-        <Route path="/" element={<div>Home</div>} />
+        <Route path="/" element={<Homepage />} />
         <Route element={<RouteAccessControl />}>
           <Route path="/web" element={<div>Web</div>} />
         </Route>

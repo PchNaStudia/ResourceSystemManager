@@ -3,7 +3,9 @@ import { z } from "zod";
 import env from "../../../env";
 import { createRemoteJWKSet, jwtVerify } from "jose";
 import crypto from "crypto";
-import { UserType } from "@common/DbTypesPolyfill";
+import sessionManager, {
+  googleIdTokenPayloadSchema,
+} from "@server/SessionManager";
 
 const googleConfigurationValidator = z
   .object({
@@ -40,7 +42,7 @@ async function verifyGoogleIdToken(idToken: string) {
       issuer: googleConfiguration.issuer,
       audience: env.GOOGLE_CLIENT_ID,
     });
-    return payload;
+    return googleIdTokenPayloadSchema.parse(payload);
   } catch (error) {
     console.error("Error verifying Google ID token:", error);
     return null;
@@ -68,9 +70,18 @@ googleAuthRouter.get("/login", (req, res) => {
   const state = crypto.randomBytes(16).toString("base64url");
   const nonce = crypto.randomUUID().toString();
   stateToNonce[state] = nonce;
-  res.redirect(
-    `${googleConfiguration.authorization_endpoint}?client_id=${env.GOOGLE_CLIENT_ID}&scope=openid%20email%20profile&response_type=code&redirect_uri=${req.protocol}://${req.host}${req.baseUrl}/callback&state=${state}&nonce=${nonce}`,
+  const url = new URL(googleConfiguration.authorization_endpoint);
+  url.searchParams.set("client_id", env.GOOGLE_CLIENT_ID);
+  url.searchParams.set("scope", "openid email profile");
+  url.searchParams.set("response_type", "code");
+  url.searchParams.set(
+    "redirect_uri",
+    `${req.protocol}://${req.host}${req.baseUrl}/callback`,
   );
+  url.searchParams.set("state", state);
+  url.searchParams.set("nonce", nonce);
+  url.searchParams.set("prompt", "select_account");
+  res.redirect(url.toString());
 });
 
 const googleCallbackSchema = z
@@ -122,19 +133,11 @@ googleAuthRouter.get("/callback", async (req, res) => {
     res.status(400).json({ error: "Invalid nonce" });
     return;
   }
-  if (payload.email_verified !== true) {
+  if (!payload.email_verified) {
     res.status(400).json({ error: "Email not verified" });
     return;
   }
-  // TODO: Get user from database or create new one by 'sub' (subject) from payload
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const user: UserType = {
-    id: "1",
-    fullName: payload.name as string,
-    email: payload.email as `${string}@${string}.${string}`,
-  };
-  // TODO: Create session in database or key value store (tbd)
-  const sessionId = crypto.randomUUID().toString();
+  const sessionId = await sessionManager.tryCreateSession(payload);
   res.cookie("sessionId", sessionId, {
     sameSite: "lax",
     maxAge: 30 * 60 * 1000,
@@ -149,8 +152,8 @@ googleAuthRouter.get("/callback", async (req, res) => {
 
 googleAuthRouter.get("/upgrade", (req, res) => {
   console.log(req.cookies);
-  const { sessionId } = req.cookies as { sessionId: string };
-  if (!sessionId) {
+  const { sessionId } = req.cookies as { sessionId: string | undefined };
+  if (!sessionId || !sessionManager.getSessionUser(sessionId)) {
     res.status(401).json({ error: "Unauthorized" });
     return;
   }

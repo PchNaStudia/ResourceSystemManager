@@ -1,5 +1,5 @@
 import * as React from "react";
-import { UserType } from "@common/DbTypesPolyfill";
+import { UserType } from "@common/DbTypes";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 type AuthContextType = {
