@@ -8,6 +8,6 @@ dotenv.config();
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react(), tsconfigPaths()],
-  build: { outDir: "dist" },
+  build: { outDir: "dist/client" },
   base: process.env.BASE ?? "/web",
 });

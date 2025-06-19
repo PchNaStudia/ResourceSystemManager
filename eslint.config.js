@@ -17,64 +17,6 @@ export default tseslint.config(
     },
     rules: {
       ...pluginReact.configs.recommended.rules,
-      "@typescript-eslint/naming-convention": [
-        "error",
-        {
-          selector: "default",
-          format: ["camelCase", "PascalCase"],
-        },
-        {
-          selector: "variable",
-          format: ["camelCase"],
-        },
-        {
-          selector: "variable",
-          types: ["function"],
-          format: ["PascalCase", "camelCase"],
-        },
-        {
-          selector: "variable",
-          types: ["boolean"],
-          format: ["PascalCase"],
-          prefix: ["is", "should", "has", "can", "did", "will"],
-        },
-        {
-          selector: "function",
-          format: ["PascalCase", "camelCase"],
-          trailingUnderscore: "allow",
-        },
-        {
-          selector: "typeAlias",
-          format: ["PascalCase"],
-          suffix: ["Props", "Type"],
-        },
-        {
-          selector: "import",
-          format: ["PascalCase", "camelCase"],
-        },
-        {
-          selector: "objectLiteralProperty",
-          format: ["camelCase", "snake_case", "UPPER_CASE"],
-        },
-        {
-          selector: "objectLiteralProperty",
-          format: null,
-          filter: {
-            regex: "^Content-Type|Accept|Authorization|Content-Length$",
-            match: true,
-          },
-        },
-        {
-          selector: "parameter",
-          format: ["camelCase"],
-          leadingUnderscore: "allow",
-        },
-        {
-          selector: "variable",
-          modifiers: ["destructured"],
-          format: ["camelCase", "snake_case"],
-        },
-      ],
     },
     settings: {
       react: {

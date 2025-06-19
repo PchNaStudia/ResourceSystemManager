@@ -34,18 +34,18 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   } = useSuspenseQuery({
     queryKey: ["getSession"],
     queryFn: async () => {
-      const res = await fetch("/api/auth/session");
-      return (await res.json()) as UserType | null;
+      const res = await fetch("api/auth/session");
+      return (res ? await res.json() : null) as UserType | null;
     },
   });
   const login = () => {
     console.log("Login");
-    window.location.href = "/api/auth/google/login";
+    window.location.href = "api/auth/login";
   };
 
   const logout = () => {
     console.log("Logout");
-    window.location.href = "/api/auth/logout";
+    window.location.href = "api/auth/logout";
   };
 
   return (
