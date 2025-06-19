@@ -1,5 +1,5 @@
 import * as React from "react";
-import { UserType } from "@common/DbTypes";
+import {UserType, UserTypeSchema} from "@common/ApiTypes";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 type AuthContextType = {
@@ -35,7 +35,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     queryKey: ["getSession"],
     queryFn: async () => {
       const res = await fetch("api/auth/session");
-      return (res ? await res.json() : null) as UserType | null;
+      return UserTypeSchema.parse(await res.json());
     },
   });
   const login = () => {

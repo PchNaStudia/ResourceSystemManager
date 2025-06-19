@@ -1,4 +1,4 @@
-import { users, session } from "@server/db/schema";
+import { users, session, resourcesAccess, resourcesGroups } from "@server/db/schema";
 
 declare global {
   namespace Express {
@@ -6,6 +6,8 @@ declare global {
       user?: typeof users.$inferSelect;
       session?: typeof session.$inferSelect;
       ua?: string;
+      resourceAccess?: typeof resourcesAccess.$inferSelect | null;
+      resourceGroup?: typeof resourcesGroups.$inferSelect;
     }
   }
 }

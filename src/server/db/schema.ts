@@ -19,7 +19,7 @@ const commonFields = {
 export const users = mysqlTable("users", {
   id: varchar({ length: 255 }).notNull().primaryKey(),
   displayName: text().notNull(),
-  email: text().notNull(),
+  email: varchar({ length: 255 }).notNull().unique(),
   picture: text().notNull(),
   ...commonFields,
 });
@@ -38,11 +38,10 @@ export const resourcesAccess = mysqlTable(
     userId: varchar({ length: 255 })
       .notNull()
       .references(() => users.id),
-    groupId: bigint({ mode: "bigint", unsigned: true })
+    groupId: bigint({ mode: "number", unsigned: true })
       .notNull()
       .references(() => resourcesGroups.id),
     create: boolean().notNull().default(false),
-    read: boolean().notNull().default(false),
     update: boolean().notNull().default(false),
     delete: boolean().notNull().default(false),
     manageAccess: boolean().notNull().default(false),
@@ -56,10 +55,10 @@ export const resourcesAccess = mysqlTable(
 
 export const resourceType = mysqlTable("resource_type", {
   id: serial().primaryKey(),
-  parentId: bigint({ mode: "bigint", unsigned: true }).references(
+  parentId: bigint({ mode: "number", unsigned: true }).references(
     (): AnyMySqlColumn => resourceType.id,
   ),
-  groupId: bigint({ mode: "bigint", unsigned: true }).references(
+  groupId: bigint({ mode: "number", unsigned: true }).references(
     () => resourcesGroups.id,
   ),
   name: text().notNull(),
@@ -70,10 +69,10 @@ export const resourceType = mysqlTable("resource_type", {
 
 export const resource = mysqlTable("resource", {
   id: serial().primaryKey(),
-  typeId: bigint({ mode: "bigint", unsigned: true })
+  typeId: bigint({ mode: "number", unsigned: true })
     .references(() => resourceType.id)
     .notNull(),
-  groupId: bigint({ mode: "bigint", unsigned: true })
+  groupId: bigint({ mode: "number", unsigned: true })
     .references(() => resourcesGroups.id)
     .notNull(),
   label: varchar({ length: 255 }).unique(),
@@ -98,10 +97,10 @@ export const reservation = mysqlTable("reservation", {
 export const resourceToReservation = mysqlTable(
   "resource_to_reservation",
   {
-    resourceId: bigint({ mode: "bigint", unsigned: true })
+    resourceId: bigint({ mode: "number", unsigned: true })
       .references(() => resource.id)
       .notNull(),
-    reservationId: bigint({ mode: "bigint", unsigned: true })
+    reservationId: bigint({ mode: "number", unsigned: true })
       .references(() => reservation.id)
       .notNull(),
   },

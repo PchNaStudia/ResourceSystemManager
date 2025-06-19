@@ -10,6 +10,7 @@ import {
   logout,
 } from "./helpers";
 import { authMiddleware, noCacheMiddleware } from "@server/api/middlewares";
+import {UserTypeSchema} from "@common/ApiTypes";
 
 const googleConfigurationValidator = z
   .object({
@@ -178,7 +179,7 @@ googleAuthRouter.get("/session", async (req, res) => {
     res.json(null);
     return;
   }
-  res.json((await getUser(sessionId)) ?? null);
+  res.json(UserTypeSchema.parse(await getUser(sessionId)));
 });
 
 googleAuthRouter.get("/logout", authMiddleware, async (req, res) => {

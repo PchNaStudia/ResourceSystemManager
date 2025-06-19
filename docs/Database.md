@@ -32,19 +32,19 @@ This document describes the database schema for the reservation system, based on
 
 ### `ResourceAccess`
 
-| Column        | Type                                  | Constraints                      |
-| ------------- | ------------------------------------- | -------------------------------- |
-| group_id      | INTEGER                               | NOT NULL, FK → ResourceGroup(id) |
-| user_id       | TEXT                                  | NOT NULL, FK → User(id)          |
-| create        | BOOLEAN                               | NOT NULL, DEFAULT FALSE          |
-| read          | BOOLEAN                               | NOT NULL, DEFAULT FALSE          |
-| update        | BOOLEAN                               | NOT NULL, DEFAULT FALSE          |
-| delete        | BOOLEAN                               | NOT NULL, DEFAULT FALSE          |
-| manage_access | BOOLEAN                               | NOT NULL, DEFAULT FALSE          |
-| reserve_level | ENUM(NONE, REQUEST, RESERVE, APPROVE) | NOT NULL, DEFAULT NONE           |
-| created_at    | DATETIME                              | NOT NULL                         |
-| updated_at    | DATETIME                              | NOT NULL                         |
-| PRIMARY KEY   | (group_id, user_id)                   | (group_id, user_id)              |
+| Column         | Type                                  | Constraints                      |
+|----------------| ------------------------------------- |----------------------------------|
+| group_id       | INTEGER                               | NOT NULL, FK → ResourceGroup(id) |
+| user_id        | TEXT                                  | NOT NULL, FK → User(id)          |
+| create         | BOOLEAN                               | NOT NULL, DEFAULT FALSE          |
+| read(implicit) | BOOLEAN                               | NOT NULL, DEFAULT TRUE           |
+| update         | BOOLEAN                               | NOT NULL, DEFAULT FALSE          |
+| delete         | BOOLEAN                               | NOT NULL, DEFAULT FALSE          |
+| manage_access  | BOOLEAN                               | NOT NULL, DEFAULT FALSE          |
+| reserve_level  | ENUM(NONE, REQUEST, RESERVE, APPROVE) | NOT NULL, DEFAULT NONE           |
+| created_at     | DATETIME                              | NOT NULL                         |
+| updated_at     | DATETIME                              | NOT NULL                         |
+| PRIMARY KEY    | (group_id, user_id)                   | (group_id, user_id)              |
 
 ---
 
