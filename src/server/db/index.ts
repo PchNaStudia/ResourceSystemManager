@@ -1,21 +1,18 @@
 import env from "@server/env";
-import { drizzle } from "drizzle-orm/libsql";
-import { createClient } from "@libsql/client";
-import {
-  usersTable,
-  resourcesAccessTable,
-  resourcesGroupsTable,
-} from "./schema";
+import { drizzle } from "drizzle-orm/mysql2";
+
+import * as schema from "./schema";
 export * from "./schema";
 
-const client = createClient({ url: env.DB_FILE_NAME });
 const db = drizzle({
-  schema: {
-    usersTable,
-    resourcesAccessTable,
-    resourcesGroupsTable,
+  connection: {
+    database: env.DATABASE_NAME,
+    password: env.DATABASE_PASSWORD,
+    host: env.DATABASE_HOST,
+    user: env.DATABASE_USER,
   },
-  client,
+  schema,
+  mode: "default",
 });
 
 export default db;

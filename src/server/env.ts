@@ -25,7 +25,11 @@ const envSchema = z.object({
   GOOGLE_CLIENT_ID: z.string().min(1, "Google Client ID is required"),
   GOOGLE_CLIENT_SECRET: z.string().min(1, "Google Client Secret is required"),
   SECRET: z.string().min(1, "Secret is required"),
-  DB_FILE_NAME: z.string().min(1, "Database file name is required"),
+  DATABASE_NAME: z.string().min(1, "Database name is required"),
+  DATABASE_PASSWORD: z.string().min(1, "Database password is required"),
+  DATABASE_HOST: z.string().min(1, "Database host is required"),
+  DATABASE_USER: z.string().min(1, "Database user is required"),
+  DATABASE_PORT: z.coerce.number().int().default(3306),
 });
 
 const env = envSchema.parse(process.env);

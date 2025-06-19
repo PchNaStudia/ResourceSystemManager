@@ -1,65 +1,121 @@
-import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
-import { sql } from "drizzle-orm";
-import { primaryKey } from "drizzle-orm/sqlite-core";
 import {
-  createInsertSchema,
-  createSelectSchema,
-  createUpdateSchema,
-} from "drizzle-zod";
+  mysqlTable,
+  text,
+  boolean,
+  varchar,
+  serial,
+  primaryKey,
+  bigint,
+  timestamp,
+  json,
+  AnyMySqlColumn,
+} from "drizzle-orm/mysql-core";
 
-export const usersTable = sqliteTable("users_table", {
-  id: text().notNull().primaryKey(),
-  firstName: text().notNull(),
-  lastName: text().notNull(),
+const commonFields = {
+  createdAt: timestamp().defaultNow().notNull(),
+  updatedAt: timestamp().defaultNow().onUpdateNow().notNull(),
+};
+
+export const users = mysqlTable("users", {
+  id: varchar({ length: 255 }).notNull().primaryKey(),
+  displayName: text().notNull(),
   email: text().notNull(),
   picture: text().notNull(),
-  createdAt: integer({ mode: "timestamp" }).default(sql`CURRENT_TIMESTAMP`),
+  ...commonFields,
 });
 
-export const resourcesGroupsTable = sqliteTable("resource_groups_table", {
-  id: integer().notNull().primaryKey({ autoIncrement: true }),
-  name: text().notNull(),
-  searchable: integer({ mode: "boolean" }).notNull().default(false),
-  ownerId: text()
+export const resourcesGroups = mysqlTable("resource_groups", {
+  id: serial().notNull().primaryKey(),
+  ownerId: varchar({ length: 255 })
     .notNull()
-    .references(() => usersTable.id),
-  createdAt: integer({ mode: "timestamp" }).default(sql`CURRENT_TIMESTAMP`),
+    .references(() => users.id),
+  ...commonFields,
 });
 
-export const resourcesAccessTable = sqliteTable(
-  "resources_access_table",
+export const resourcesAccess = mysqlTable(
+  "resources_access",
   {
-    userId: text()
+    userId: varchar({ length: 255 })
       .notNull()
-      .references(() => usersTable.id),
-    groupId: integer()
+      .references(() => users.id),
+    groupId: bigint({ mode: "bigint", unsigned: true })
       .notNull()
-      .references(() => resourcesGroupsTable.id),
-    create: integer({ mode: "boolean" }).notNull().default(false),
-    read: integer({ mode: "boolean" }).notNull().default(false),
-    update: integer({ mode: "boolean" }).notNull().default(false),
-    delete: integer({ mode: "boolean" }).notNull().default(false),
-    reserve: integer({ mode: "boolean" }).notNull().default(false),
-    changePermissions: integer({ mode: "boolean" }).notNull().default(false),
-    createdAt: integer({ mode: "timestamp" }).default(sql`CURRENT_TIMESTAMP`),
+      .references(() => resourcesGroups.id),
+    create: boolean().notNull().default(false),
+    read: boolean().notNull().default(false),
+    update: boolean().notNull().default(false),
+    delete: boolean().notNull().default(false),
+    manageAccess: boolean().notNull().default(false),
+    reserveLevel: text({ enum: ["NONE", "REQUEST", "RESERVE", "APPROVE"] })
+      .notNull()
+      .default("NONE"),
+    ...commonFields,
   },
   (table) => [primaryKey({ columns: [table.userId, table.groupId] })],
 );
 
-export const validators = {
-  select: {
-    users: createSelectSchema(usersTable),
-    resourcesGroups: createSelectSchema(resourcesGroupsTable),
-    resourcesAccess: createSelectSchema(resourcesAccessTable),
+export const resourceType = mysqlTable("resource_type", {
+  id: serial().primaryKey(),
+  parentId: bigint({ mode: "bigint", unsigned: true }).references(
+    (): AnyMySqlColumn => resourceType.id,
+  ),
+  groupId: bigint({ mode: "bigint", unsigned: true }).references(
+    () => resourcesGroups.id,
+  ),
+  name: text().notNull(),
+  shortName: text(),
+  metadataSchema: json(),
+  ...commonFields,
+});
+
+export const resource = mysqlTable("resource", {
+  id: serial().primaryKey(),
+  typeId: bigint({ mode: "bigint", unsigned: true })
+    .references(() => resourceType.id)
+    .notNull(),
+  groupId: bigint({ mode: "bigint", unsigned: true })
+    .references(() => resourcesGroups.id)
+    .notNull(),
+  label: varchar({ length: 255 }).unique(),
+  metadata: json(),
+  ...commonFields,
+});
+
+export const reservation = mysqlTable("reservation", {
+  id: serial().primaryKey(),
+  userId: varchar({ length: 255 })
+    .references(() => users.id)
+    .notNull(),
+  startTime: timestamp().notNull(),
+  endTime: timestamp().notNull(),
+  reason: text(),
+  status: text({ enum: ["REQUESTED", "CONFIRMED", "REJECTED", "CANCELED"] }),
+  approvedBy: varchar({ length: 255 }).references(() => users.id),
+  approvedAt: timestamp(),
+  ...commonFields,
+});
+
+export const resourceToReservation = mysqlTable(
+  "resource_to_reservation",
+  {
+    resourceId: bigint({ mode: "bigint", unsigned: true })
+      .references(() => resource.id)
+      .notNull(),
+    reservationId: bigint({ mode: "bigint", unsigned: true })
+      .references(() => reservation.id)
+      .notNull(),
   },
-  update: {
-    users: createUpdateSchema(usersTable),
-    resourcesGroups: createUpdateSchema(resourcesGroupsTable),
-    resourcesAccess: createUpdateSchema(resourcesAccessTable),
-  },
-  insert: {
-    users: createInsertSchema(usersTable),
-    resourcesGroups: createInsertSchema(resourcesGroupsTable),
-    resourcesAccess: createInsertSchema(resourcesAccessTable),
-  },
-};
+  (table) => [primaryKey({ columns: [table.resourceId, table.reservationId] })],
+);
+
+export const session = mysqlTable("session", {
+  id: varchar({ length: 255 }).primaryKey(),
+  userId: varchar({ length: 255 })
+    .references(() => users.id)
+    .notNull(),
+  expiresAt: timestamp().notNull(),
+  isActive: boolean().notNull().default(true),
+  ip: text(),
+  userAgent: text(),
+  ...commonFields,
+});
