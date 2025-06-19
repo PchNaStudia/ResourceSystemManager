@@ -24,12 +24,14 @@ jobs:
 
       - name: Check commit messages
         run: |
-          commits=$(git log --format=%B ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }})
+          commit_hashes=$(git rev-list ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }})
 
-          echo "$commits" | while read -r message; do
-            if ! echo "$message" | grep -Eq "^(RSM-[0-9]+|TRIVIAL|DOC|WORKFLOW): .+"; then
-              echo "Invalid commit message format: $message"
-              echo "Commit messages must match pattern: (RSM-\d+)|(TRIVIAL)|(DOC)|(WORKFLOW): ..."
+          for hash in $commit_hashes; do
+            subject=$(git log -1 --format=%s "$hash")
+            if ! echo "$subject" | grep -Eq "^(RSM-[0-9]+|TRIVIAL|DOC|WORKFLOW): .+"; then
+              echo "Invalid commit message format in commit $hash:"
+              echo "  $subject"
+              echo "Commit messages must match pattern: (RSM-\\d+)|(TRIVIAL)|(DOC)|(WORKFLOW): ..."
               exit 1
-            fi
-          done
+              fi
+              done
