@@ -12,24 +12,30 @@
     "start": "cross-env NODE_ENV=production tsx src/server/main.ts",
     "build": "vite build",
     "format:fix": "eslint . --fix && prettier --write .",
-    "format:check": "eslint . && prettier --check ."
+    "format:check": "eslint . && prettier --check .",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:push": "drizzle-kit push"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@libsql/client": "^0.15.9",
+    "@mui/icons-material": "^7.1.1",
+    "@mui/material": "^7.1.1",
+    "@tanstack/react-query": "^5.80.6",
     "cookie-parser": "^1.4.7",
     "cross-env": "^7.0.3",
     "dotenv": "^16.5.0",
-    "eslint": "^9.28.0",
-    "eslint-config-prettier": "^10.1.5",
-    "eslint-plugin-react": "^7.37.5",
+    "drizzle-orm": "^0.44.2",
+    "drizzle-zod": "^0.8.2",
     "express": "^5.1.0",
     "jose": "^6.0.11",
-    "prettier": "^3.5.3",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "tsx": "^4.19.3",
-    "typescript": "^5.8.3",
-    "typescript-eslint": "^8.33.0",
+    "react-router": "^7.6.2",
     "vite-express": "*",
+    "vite-plugin-svgr": "^4.3.0",
     "zod": "^3.25.46"
   },
   "devDependencies": {
@@ -39,7 +45,16 @@
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
     "@vitejs/plugin-react": "^4.4.1",
+    "drizzle-kit": "^0.31.1",
     "nodemon": "^3.1.10",
-    "vite": "^6.3.3"
+    "vite": "^6.3.3",
+    "vite-tsconfig-paths": "^5.1.4",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.33.0",
+    "prettier": "^3.5.3",
+    "eslint": "^9.28.0",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-react": "^7.37.5"
   }
 }
