@@ -85,10 +85,13 @@ export const reservation = mysqlTable("reservation", {
   userId: varchar({ length: 255 })
     .references(() => users.id)
     .notNull(),
+  groupId: bigint({ mode: "number", unsigned: true })
+    .references(() => resourcesGroups.id)
+    .notNull(),
   startTime: timestamp().notNull(),
   endTime: timestamp().notNull(),
   reason: text(),
-  status: text({ enum: ["REQUESTED", "CONFIRMED", "REJECTED", "CANCELED"] }),
+  status: text({ enum: ["REQUESTED", "CONFIRMED", "REJECTED", "CANCELED"] }).notNull(),
   approvedBy: varchar({ length: 255 }).references(() => users.id),
   approvedAt: timestamp(),
   ...commonFields,
