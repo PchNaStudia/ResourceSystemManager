@@ -1,6 +1,8 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Outlet } from "react-router";
 import { useAuth } from "@client/AuthContext";
+import { z } from "zod";
+import ValidateRoute from "@client/components/ValidatedRouteParams";
 
 const RouteAccessControl = () => {
   const { user, login } = useAuth();
@@ -18,7 +20,16 @@ const AppRoutes = () => {
         {/*TODO: Move pages separate component*/}
         <Route path="/" element={<div>Home</div>} />
         <Route element={<RouteAccessControl />}>
-          <Route path="/web" element={<div>Web</div>} />
+          <Route
+            path="/test/:id"
+            element={
+              <ValidateRoute
+                paramValidator={z.object({ id: z.coerce.number().int() })}
+                element={({ id }) => <div>Test {id}</div>}
+                invalid={<div>Invalid</div>}
+              />
+            }
+          />
         </Route>
       </Routes>
     </BrowserRouter>

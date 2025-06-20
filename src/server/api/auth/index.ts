@@ -174,12 +174,17 @@ googleAuthRouter.get("/upgrade", async (req, res) => {
 });
 
 googleAuthRouter.get("/session", async (req, res) => {
-  const { sessionId } = req.signedCookies as { sessionId?: string };
-  if (!sessionId) {
-    res.json(null);
-    return;
+  try {
+    const { sessionId } = req.signedCookies as { sessionId?: string };
+    if (!sessionId) {
+      res.json(null);
+      return;
+    }
+    res.json(UserTypeSchema.parse(await getUser(sessionId)));
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: "Internal Server Error" });
   }
-  res.json(UserTypeSchema.parse(await getUser(sessionId)));
 });
 
 googleAuthRouter.get("/logout", authMiddleware, async (req, res) => {
