@@ -1,7 +1,7 @@
 import {Router} from 'express';
 import {CreateResourceGroupAccessSchema, ResourceAccessSchema} from "@common/ApiTypes";
 import db, {resourcesAccess} from "@server/db";
-import {and, eq} from "drizzle-orm";
+import {and, eq, not} from "drizzle-orm";
 import {z} from "zod";
 
 const resourceAccessRouter = Router();
@@ -41,7 +41,16 @@ resourceAccessRouter.get('/:userId', async(req, res) => {
 resourceAccessRouter.post('/:userId', async(req, res) => {
   try {
     const userId = z.string().parse(req.params.userId)
+    if(userId === req.resourceGroup!.ownerId) {
+      res.status(400).json({error: "You can not add owner access"})
+      return;
+    }
     const userAccessData = CreateResourceGroupAccessSchema.parse(req.body)
+    // only owner should be able to add manageAccess permissions
+    if(req.resourceAccess && userAccessData.manageAccess){
+      res.status(401).json({error: "You can not set manageAccess permissions for other users. Only owner can do that."})
+      return
+    }
     await db.insert(resourcesAccess).values({
       userId,
       groupId: req.resourceGroup!.id,
@@ -60,8 +69,17 @@ resourceAccessRouter.post('/:userId', async(req, res) => {
 
 resourceAccessRouter.put('/:userId', async(req, res) => {
   try {
+    if(req.resourceAccess && !req.resourceAccess.manageAccess){
+      res.status(401).json({error: "You can not edit permissions of other users"})
+      return
+    }
     const userId = z.string().parse(req.params.userId)
     const userAccessData = CreateResourceGroupAccessSchema.parse(req.body)
+    // only owner should be able to add manageAccess permissions
+    if(req.resourceAccess && userAccessData.manageAccess){
+      res.status(401).json({error: "You can not set manageAccess permissions for other users. Only owner can do that."})
+      return
+    }
     const [result] = await db.update(resourcesAccess).set({
       create: userAccessData.create,
       update: userAccessData.update,
@@ -71,11 +89,36 @@ resourceAccessRouter.put('/:userId', async(req, res) => {
     }).where(
       and(
         eq(resourcesAccess.userId, userId),
-        eq(resourcesAccess.groupId, req.resourceGroup!.id)
+        eq(resourcesAccess.groupId, req.resourceGroup!.id),
       )
     )
     if(result.affectedRows === 0){
       res.status(404).json({error: "User does not have access to this resource group"})
+      return
+    }
+    res.status(200).send()
+  } catch {
+    res.status(400).json({error: "Failed to get access to update"})
+    return
+  }
+})
+
+resourceAccessRouter.delete('/:userId', async(req, res)=>{
+  try{
+    if(req.resourceAccess && !req.resourceAccess.manageAccess){
+      res.status(401).json({error: "You can not remove permissions from other users"})
+      return
+    }
+    const userId = z.string().parse(req.params.userId)
+    const [result] = await db.delete(resourcesAccess).where(
+      and(
+        eq(resourcesAccess.userId, userId),
+        eq(resourcesAccess.groupId, req.resourceGroup!.id),
+        req.resourceAccess ? eq(resourcesAccess.manageAccess, false) : undefined
+      )
+    )
+    if(result.affectedRows === 0){
+      res.status(404).json({error: "User does not have access or he has same permissions as you"})
       return
     }
     res.status(200).send()
