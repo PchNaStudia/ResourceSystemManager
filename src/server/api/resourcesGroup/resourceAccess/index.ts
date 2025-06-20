@@ -1,7 +1,7 @@
 import { Router } from "express";
 import {
-  CreateResourceGroupAccessSchema,
   ResourceAccessSchema,
+  CreateResourceGroupAccessSchema,
 } from "@common/ApiTypes";
 import db, { resourcesAccess } from "@server/db";
 import { and, eq } from "drizzle-orm";

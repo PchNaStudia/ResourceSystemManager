@@ -1,8 +1,8 @@
 import { Router } from "express";
 import {
+  ReserveSchema,
   GetReservationsSchema,
   ReservationApprovalSchema,
-  ReserveSchema,
 } from "@common/ApiTypes";
 import db, { reservation, resource, resourceToReservation } from "@server/db";
 import { and, eq, gt, gte, inArray, lt, lte, or, sql } from "drizzle-orm";
