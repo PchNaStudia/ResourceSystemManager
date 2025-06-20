@@ -24,19 +24,16 @@ export const createSession = async (
   ip?: string,
   userAgent?: string,
 ) => {
-  await db
-    .insert(users)
-    .values({
+  try {
+    await db.insert(users).values({
       id: payload.sub,
       email: payload.email,
       picture: payload.picture,
       displayName: payload.name,
-    })
-    .onDuplicateKeyUpdate({
-      set: {
-        id: payload.sub,
-      },
     });
+  } catch {
+    // silently fail if the user already exists
+  }
   const id = crypto.randomUUID();
   await db.insert(session).values({
     userId: payload.sub,

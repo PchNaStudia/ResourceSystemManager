@@ -1,14 +1,17 @@
 import { z } from "zod";
 
-export const UserTypeSchema = z
+export const GetUserSchema = z
   .object({
     id: z.string(),
     name: z.string(),
     email: z.string(),
     picture: z.string(),
   })
-  .strip()
-  .nullable();
+  .strip();
+
+export const UpdateUserSchema = GetUserSchema.omit({ id: true }).partial();
+
+export const UserTypeSchema = GetUserSchema.nullable();
 
 export type UserType = z.infer<typeof UserTypeSchema>;
 
