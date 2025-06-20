@@ -1,5 +1,5 @@
 import * as React from "react";
-import {UserType, UserTypeSchema} from "@common/ApiTypes";
+import { UserType, UserTypeSchema } from "@common/ApiTypes";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 type AuthContextType = {

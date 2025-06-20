@@ -10,7 +10,7 @@ import {
   logout,
 } from "./helpers";
 import { authMiddleware, noCacheMiddleware } from "@server/api/middlewares";
-import {UserTypeSchema} from "@common/ApiTypes";
+import { UserTypeSchema } from "@common/ApiTypes";
 
 const googleConfigurationValidator = z
   .object({

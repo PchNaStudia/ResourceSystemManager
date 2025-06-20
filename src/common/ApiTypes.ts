@@ -1,73 +1,84 @@
-import {z} from 'zod'
+import { z } from "zod";
 
-export const UserTypeSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  email: z.string(),
-  picture: z.string(),
-}).strip().nullable();
+export const UserTypeSchema = z
+  .object({
+    id: z.string(),
+    name: z.string(),
+    email: z.string(),
+    picture: z.string(),
+  })
+  .strip()
+  .nullable();
 
 export type UserType = z.infer<typeof UserTypeSchema>;
 
-export const ResourceGroupTypeSchema = z.object({
-  id: z.number(),
-  ownerId: z.string(),
-}).strip();
+export const ResourceGroupTypeSchema = z
+  .object({
+    id: z.number(),
+    ownerId: z.string(),
+  })
+  .strip();
 
 export type ResourceGroupType = z.infer<typeof ResourceGroupTypeSchema>;
 
-export const ResourceAccessSchema = z.object({
-  userId: z.string(),
-  groupId: z.number(),
-  create: z.coerce.boolean(),
-  update: z.coerce.boolean(),
-  delete: z.coerce.boolean(),
-  manageAccess: z.coerce.boolean(),
-  reserveLevel: z.enum(["NONE", "REQUEST", "RESERVE", "APPROVE"]),
-}).strip()
+export const ResourceAccessSchema = z
+  .object({
+    userId: z.string(),
+    groupId: z.number(),
+    create: z.coerce.boolean(),
+    update: z.coerce.boolean(),
+    delete: z.coerce.boolean(),
+    manageAccess: z.coerce.boolean(),
+    reserveLevel: z.enum(["NONE", "REQUEST", "RESERVE", "APPROVE"]),
+  })
+  .strip();
 
 export type ResourceAccess = z.infer<typeof ResourceAccessSchema>;
 
-export const ResourceGroupAccessSchema = z.object({
-  resourceGroups: ResourceGroupTypeSchema,
-  resourcesAccess: ResourceAccessSchema,
-}).strip()
+export const ResourceGroupAccessSchema = z
+  .object({
+    resourceGroups: ResourceGroupTypeSchema,
+    resourcesAccess: ResourceAccessSchema,
+  })
+  .strip();
 
 export type ResourceGroupAccess = z.infer<typeof ResourceGroupAccessSchema>;
 
-export const ResourceGroupAccessListSchema = z.array(ResourceGroupAccessSchema)
+export const ResourceGroupAccessListSchema = z.array(ResourceGroupAccessSchema);
 
-export type ResourceGroupAccessList = z.infer<typeof ResourceGroupAccessListSchema>
+export type ResourceGroupAccessList = z.infer<
+  typeof ResourceGroupAccessListSchema
+>;
 
 export const UpdateResourceGroupSchema = z.object({
   ownerId: z.string(),
-})
+});
 
-export const ResourceSchema = z.object({
-  id: z.number(),
-  typeId: z.number(),
-  groupId: z.number(),
-  label: z.string().nullable(),
-  metadata: z.unknown(),
-}).strip();
+export const ResourceSchema = z
+  .object({
+    id: z.number(),
+    typeId: z.number(),
+    groupId: z.number(),
+    label: z.string().nullable(),
+    metadata: z.unknown(),
+  })
+  .strip();
 
 export type Resource = z.infer<typeof ResourceSchema>;
 
-export const ResourceSchemaList = z.array(ResourceSchema)
+export const ResourceSchemaList = z.array(ResourceSchema);
 
 export const CreateResourceSchema = z.object({
   typeId: z.number(),
   label: z.string().optional(),
   metadata: z.unknown().optional(),
-})
+});
 
-export const UpdateResourceSchema = z.object(
-  {
-    typeId: z.number().optional(),
-    label: z.string().optional(),
-    metadata: z.unknown().optional(),
-  }
-)
+export const UpdateResourceSchema = z.object({
+  typeId: z.number().optional(),
+  label: z.string().optional(),
+  metadata: z.unknown().optional(),
+});
 
 export const CreateResourceGroupAccessSchema = z.object({
   create: z.coerce.boolean().optional(),
@@ -75,9 +86,9 @@ export const CreateResourceGroupAccessSchema = z.object({
   delete: z.coerce.boolean().optional(),
   manageAccess: z.coerce.boolean().optional(),
   reserveLevel: z.enum(["NONE", "REQUEST", "RESERVE", "APPROVE"]).optional(),
-})
+});
 
-export const UpdateResourceGroupAccessSchema = CreateResourceGroupAccessSchema
+export const UpdateResourceGroupAccessSchema = CreateResourceGroupAccessSchema;
 
 export const ReserveSchema = z.object({
   resources: z.array(z.number()),
@@ -85,16 +96,18 @@ export const ReserveSchema = z.object({
   endTime: z.coerce.date(),
   reason: z.string().optional(),
   force: z.boolean().default(false),
-})
+});
 
-export const GetReservationsSchema = z.array(z.object({
-  reservation: ReserveSchema,
-  resources: z.array(ResourceSchema)
-}))
+export const GetReservationsSchema = z.array(
+  z.object({
+    reservation: ReserveSchema,
+    resources: z.array(ResourceSchema),
+  }),
+);
 
 export const ReservationApprovalSchema = z.object({
-  reserveLevel: z.enum(["CONFIRMED", "REJECTED", "CANCELED"])
-})
+  reserveLevel: z.enum(["CONFIRMED", "REJECTED", "CANCELED"]),
+});
 
 export const ResourceTypeCreateSchema = z.object({
   parentId: z.number().optional(),

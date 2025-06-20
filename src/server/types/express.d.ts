@@ -1,4 +1,9 @@
-import { users, session, resourcesAccess, resourcesGroups } from "@server/db/schema";
+import {
+  users,
+  session,
+  resourcesAccess,
+  resourcesGroups,
+} from "@server/db/schema";
 
 declare global {
   namespace Express {

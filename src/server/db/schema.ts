@@ -91,7 +91,9 @@ export const reservation = mysqlTable("reservation", {
   startTime: timestamp().notNull(),
   endTime: timestamp().notNull(),
   reason: text(),
-  status: text({ enum: ["REQUESTED", "CONFIRMED", "REJECTED", "CANCELED"] }).notNull(),
+  status: text({
+    enum: ["REQUESTED", "CONFIRMED", "REJECTED", "CANCELED"],
+  }).notNull(),
   approvedBy: varchar({ length: 255 }).references(() => users.id),
   approvedAt: timestamp(),
   ...commonFields,

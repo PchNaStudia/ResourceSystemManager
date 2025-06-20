@@ -33,7 +33,7 @@ This document describes the database schema for the reservation system, based on
 ### `ResourceAccess`
 
 | Column         | Type                                  | Constraints                      |
-|----------------| ------------------------------------- |----------------------------------|
+| -------------- | ------------------------------------- | -------------------------------- |
 | group_id       | INTEGER                               | NOT NULL, FK → ResourceGroup(id) |
 | user_id        | TEXT                                  | NOT NULL, FK → User(id)          |
 | create         | BOOLEAN                               | NOT NULL, DEFAULT FALSE          |

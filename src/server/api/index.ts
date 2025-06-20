@@ -10,7 +10,7 @@ const apiRouter = Router();
 apiRouter.use(cookieParser(env.SECRET));
 apiRouter.use(uaMiddleware);
 
-apiRouter.use('/auth', googleAuthRouter);
-apiRouter.use('/resourcesGroup', resourcesGroupRouter)
+apiRouter.use("/auth", googleAuthRouter);
+apiRouter.use("/resourcesGroup", resourcesGroupRouter);
 
 export default apiRouter;
