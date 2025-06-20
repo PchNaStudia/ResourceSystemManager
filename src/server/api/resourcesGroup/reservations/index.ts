@@ -128,11 +128,9 @@ reservationsRouter.post("/", async (req, res) => {
       if (
         !reserveData.resources.every((v) => resources.some((r) => r.id === v))
       ) {
-        res
-          .status(400)
-          .json({
-            error: "Some of the resources do not exist in resource group",
-          });
+        res.status(400).json({
+          error: "Some of the resources do not exist in resource group",
+        });
         tx.rollback();
         return;
       }
@@ -164,12 +162,10 @@ reservationsRouter.post("/", async (req, res) => {
           ),
         );
       if (conflicts.some((v) => v.status === "CONFIRMED")) {
-        res
-          .status(409)
-          .json({
-            error: "Some of the resources are already reserved",
-            hard: true,
-          });
+        res.status(409).json({
+          error: "Some of the resources are already reserved",
+          hard: true,
+        });
         tx.rollback();
         return;
       }
@@ -212,12 +208,10 @@ reservationsRouter.post("/", async (req, res) => {
               );
           }
         } else {
-          res
-            .status(409)
-            .json({
-              error: "Some of the resources are already requested",
-              hard: false,
-            });
+          res.status(409).json({
+            error: "Some of the resources are already requested",
+            hard: false,
+          });
           tx.rollback();
           return;
         }

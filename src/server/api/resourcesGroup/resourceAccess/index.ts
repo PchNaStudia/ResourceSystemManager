@@ -59,12 +59,10 @@ resourceAccessRouter.post("/:userId", async (req, res) => {
     const userAccessData = CreateResourceGroupAccessSchema.parse(req.body);
     // only owner should be able to add manageAccess permissions
     if (req.resourceAccess && userAccessData.manageAccess) {
-      res
-        .status(401)
-        .json({
-          error:
-            "You can not set manageAccess permissions for other users. Only owner can do that.",
-        });
+      res.status(401).json({
+        error:
+          "You can not set manageAccess permissions for other users. Only owner can do that.",
+      });
       return;
     }
     await db.insert(resourcesAccess).values({
@@ -97,12 +95,10 @@ resourceAccessRouter.put("/:userId", async (req, res) => {
     const userAccessData = CreateResourceGroupAccessSchema.parse(req.body);
     // only owner should be able to add manageAccess permissions
     if (req.resourceAccess && userAccessData.manageAccess) {
-      res
-        .status(401)
-        .json({
-          error:
-            "You can not set manageAccess permissions for other users. Only owner can do that.",
-        });
+      res.status(401).json({
+        error:
+          "You can not set manageAccess permissions for other users. Only owner can do that.",
+      });
       return;
     }
     const [result] = await db
@@ -154,11 +150,9 @@ resourceAccessRouter.delete("/:userId", async (req, res) => {
         ),
       );
     if (result.affectedRows === 0) {
-      res
-        .status(404)
-        .json({
-          error: "User does not have access or he has same permissions as you",
-        });
+      res.status(404).json({
+        error: "User does not have access or he has same permissions as you",
+      });
       return;
     }
     res.status(200).send();
