@@ -22,7 +22,6 @@ const Layout = ({ body }: LayoutProps) => {
         p={1}
         flexGrow={1}
         display="flex"
-        height={"200vh"}
         flexDirection="column"
       >
         {body}

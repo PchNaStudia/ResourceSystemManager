@@ -170,7 +170,7 @@ googleAuthRouter.get("/upgrade", async (req, res) => {
     secure: env.NODE_ENV === "production",
     signed: true,
   });
-  res.redirect("/web");
+  res.redirect(env.BASE);
 });
 
 googleAuthRouter.get("/session", async (req, res) => {
