@@ -2,28 +2,28 @@ import React from "react";
 import {
   AppBar,
   Avatar,
-  Button,
   Box,
+  Button,
   IconButton,
+  Link,
   Menu,
   MenuItem,
   Stack,
   Toolbar,
   Tooltip,
   Typography,
+  useColorScheme,
 } from "@mui/material";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
-import { useAuth } from "./AuthContext";
-import { useThemeMode } from "./ThemeModeContext";
-// @ts-expect-error: react fucks it up
-import Logo from "./Logo.svg?react";
+import {useAuth} from "./AuthContext";
+import Logo from "@client/components/Logo";
 
 const settings = ["Account", "Logout"];
 
 const ResponsiveAppBar = () => {
   const { user, login, logout } = useAuth();
-  const { themeMode, setThemeMode } = useThemeMode();
+  const { mode, setMode } = useColorScheme();
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null,
   );
@@ -36,43 +36,47 @@ const ResponsiveAppBar = () => {
     setAnchorElUser(null);
   };
 
-  const { theme } = useThemeMode();
-
   return (
-    <AppBar position="static" color="default" elevation={1}>
-      <Box sx={{ width: "100%", m: 0, p: 0 }}>
+    <Box
+      component="header"
+      px={1}
+      pt={1}
+      position="sticky"
+      width="100%"
+      top={0}
+      zIndex={1000}
+    >
+      <AppBar
+        component="nav"
+        color="default"
+        sx={{p: 1, borderRadius: 2}}
+        variant="elevation"
+        position="static"
+      >
         <Toolbar disableGutters sx={{ justifyContent: "space-between" }}>
           <Stack direction="row" spacing={2} alignItems="center">
-            <a href={import.meta.env.BASE_URL}>
-              <Logo
-                style={{
-                  height: 64,
-                  display: "block",
-                  padding: "8px",
-                  color: theme.palette.text.primary,
-                }}
-              />
-            </a>
+            <Link
+              href={import.meta.env.BASE_URL}
+              color="text.primary"
+              height={64}
+              underline="none"
+            >
+              <Logo height={64} withText/>
+            </Link>
           </Stack>
 
           <Stack direction="row" spacing={2} alignItems="center">
             <IconButton
-              onClick={() =>
-                setThemeMode((prev) => (prev === "light" ? "dark" : "light"))
-              }
+              onClick={() => setMode(mode === "light" ? "dark" : "light")}
             >
-              {themeMode === "light" ? (
-                <DarkModeOutlinedIcon />
-              ) : (
-                <LightModeIcon />
-              )}
+              {mode === "light" ? <DarkModeOutlinedIcon/> : <LightModeIcon/>}
             </IconButton>
             {user ? (
               <>
                 <Tooltip title="Open settings">
                   <IconButton
                     onClick={handleOpenUserMenu}
-                    sx={{ p: 0, paddingRight: "16px" }}
+                    sx={{ p: 0, paddingRight: 2 }}
                   >
                     <Avatar src={user.picture} alt={user.displayName} />
                   </IconButton>
@@ -99,12 +103,14 @@ const ResponsiveAppBar = () => {
                 </Menu>
               </>
             ) : (
-              <Button onClick={login}>Login</Button>
+              <Button onClick={login} variant="contained">
+                Login
+              </Button>
             )}
           </Stack>
         </Toolbar>
-      </Box>
-    </AppBar>
+      </AppBar>
+    </Box>
   );
 };
 

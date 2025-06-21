@@ -1,17 +1,10 @@
 import React from "react";
-import { Box, Paper, Typography, Stack } from "@mui/material";
+import {Box, Stack, Typography} from "@mui/material";
 
-const Homepage = () => {
+const HomePage = () => {
   return (
-    <Paper
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        minHeight: "100vh",
-        pl: 40,
-      }}
-    >
-      <Box sx={{ p: 4, width: 500, height: 500, overflow: "auto" }}>
+    <Stack height="100%" flexGrow={1} justifyContent="center">
+      <Box sx={{ p: 4, width: 500, height: 500 }}>
         <Typography variant="h2" gutterBottom>
           Manage Your Resources
         </Typography>
@@ -27,8 +20,8 @@ const Homepage = () => {
           <Typography>- Scalable & Extensible</Typography>
         </Stack>
       </Box>
-    </Paper>
+    </Stack>
   );
 };
 
-export default Homepage;
+export default HomePage;

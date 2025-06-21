@@ -1,7 +1,7 @@
 import React from "react";
-import { Box } from "@mui/material";
-import ResponsiveAppBar from "./navBar";
-import Footer from "./siteFooter";
+import {Box} from "@mui/material";
+import ResponsiveAppBar from "./ResponsiveAppBar";
+import Footer from "./Footer";
 
 type LayoutProps = {
   body: React.ReactNode;
@@ -9,14 +9,25 @@ type LayoutProps = {
 
 const Layout = ({ body }: LayoutProps) => {
   return (
-    <Box display="flex" flexDirection="column" minHeight="100vh">
-      <>
-        <ResponsiveAppBar />
-        <main style={{ minHeight: "100dvh" }}>{body}</main>
-        <footer>
-          <Footer />
-        </footer>
-      </>
+    <Box
+      display="flex"
+      flexDirection="column"
+      minHeight="100dvh"
+      position="relative"
+    >
+      <ResponsiveAppBar/>
+      <Box
+        component="main"
+        position="relative"
+        p={1}
+        flexGrow={1}
+        display="flex"
+        height={"200vh"}
+        flexDirection="column"
+      >
+        {body}
+      </Box>
+      <Footer/>
     </Box>
   );
 };

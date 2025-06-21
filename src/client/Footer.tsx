@@ -7,7 +7,7 @@ const Footer = () => {
       component="footer"
       sx={{ py: 3, px: 2, mt: "auto", backgroundColor: "background.paper" }}
     >
-      <Box sx={{ width: "100%", m: 0, p: 0 }}>
+      <Box sx={{ m: 0, p: 0 }}>
         <Stack
           direction={{ xs: "column", sm: "row" }}
           justifyContent="space-between"
