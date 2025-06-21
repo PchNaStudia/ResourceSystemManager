@@ -1,5 +1,5 @@
 import React from "react";
-import {Box} from "@mui/material";
+import { Box } from "@mui/material";
 import ResponsiveAppBar from "./ResponsiveAppBar";
 import Footer from "./Footer";
 
@@ -15,7 +15,7 @@ const Layout = ({ body }: LayoutProps) => {
       minHeight="100dvh"
       position="relative"
     >
-      <ResponsiveAppBar/>
+      <ResponsiveAppBar />
       <Box
         component="main"
         position="relative"
@@ -27,7 +27,7 @@ const Layout = ({ body }: LayoutProps) => {
       >
         {body}
       </Box>
-      <Footer/>
+      <Footer />
     </Box>
   );
 };

@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
-import {useAuth} from "./AuthContext";
+import { useAuth } from "./AuthContext";
 import Logo from "@client/components/Logo";
 
 const settings = ["Account", "Logout"];
@@ -49,7 +49,7 @@ const ResponsiveAppBar = () => {
       <AppBar
         component="nav"
         color="default"
-        sx={{p: 1, borderRadius: 2}}
+        sx={{ p: 1, borderRadius: 2 }}
         variant="elevation"
         position="static"
       >
@@ -61,7 +61,7 @@ const ResponsiveAppBar = () => {
               height={64}
               underline="none"
             >
-              <Logo height={64} withText/>
+              <Logo height={64} withText />
             </Link>
           </Stack>
 
@@ -69,7 +69,7 @@ const ResponsiveAppBar = () => {
             <IconButton
               onClick={() => setMode(mode === "light" ? "dark" : "light")}
             >
-              {mode === "light" ? <DarkModeOutlinedIcon/> : <LightModeIcon/>}
+              {mode === "light" ? <DarkModeOutlinedIcon /> : <LightModeIcon />}
             </IconButton>
             {user ? (
               <>

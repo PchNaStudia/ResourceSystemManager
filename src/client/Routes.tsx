@@ -1,7 +1,7 @@
 import React from "react";
-import {BrowserRouter, Outlet, Route, Routes} from "react-router";
-import {useAuth} from "@client/AuthContext";
-import {z} from "zod";
+import { BrowserRouter, Outlet, Route, Routes } from "react-router";
+import { useAuth } from "@client/AuthContext";
+import { z } from "zod";
 import ValidateRoute from "@client/components/ValidatedRouteParams";
 import HomePage from "@client/pages/HomePage";
 import AuthBased from "@client/components/AuthBased";
@@ -24,8 +24,8 @@ const AppRoutes = () => {
           path="/"
           element={
             <AuthBased
-              authedElement={<DashboardPage/>}
-              unAuthedElement={<HomePage/>}
+              authedElement={<DashboardPage />}
+              unAuthedElement={<HomePage />}
             />
           }
         />
