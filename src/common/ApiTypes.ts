@@ -93,23 +93,40 @@ export const CreateResourceGroupAccessSchema = z.object({
 
 export const UpdateResourceGroupAccessSchema = CreateResourceGroupAccessSchema;
 
+export const ReservationSchema = z.object({
+  id: z.number().int(),
+  resources: z.array(z.number()),
+  startTime: z.coerce.date(),
+  endTime: z.coerce.date(),
+  reason: z.string().nullable(),
+});
+
 export const ReserveSchema = z.object({
   resources: z.array(z.number()),
   startTime: z.coerce.date(),
   endTime: z.coerce.date(),
-  reason: z.string().optional(),
+  reason: z.string().nullable(),
   force: z.boolean().default(false),
 });
 
-export const GetReservationsSchema = z.array(
-  z.object({
-    reservation: ReserveSchema,
-    resources: z.array(ResourceSchema),
-  }),
-);
+export const ReserveResponseSchema = z.object({
+  reservationId: z.coerce.number().int(),
+});
 
+export const GetReservationSchema = z.object({
+  reservation: ReservationSchema.omit({ resources: true }),
+  resources: z.array(ResourceSchema),
+});
+
+export const GetReservationsSchema = z.array(GetReservationSchema);
+
+export const ReservationApprovalEnum = z.enum([
+  "CONFIRMED",
+  "REJECTED",
+  "CANCELED",
+]);
 export const ReservationApprovalSchema = z.object({
-  reserveLevel: z.enum(["CONFIRMED", "REJECTED", "CANCELED"]),
+  reserveLevel: ReservationApprovalEnum,
 });
 
 export const ResourceTypeCreateSchema = z.object({

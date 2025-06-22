@@ -10,6 +10,7 @@ import {
   json,
   AnyMySqlColumn,
 } from "drizzle-orm/mysql-core";
+import { sql } from "drizzle-orm";
 
 const commonFields = {
   createdAt: timestamp().defaultNow().notNull(),
@@ -55,9 +56,9 @@ export const resourcesAccess = mysqlTable(
 
 export const resourceType = mysqlTable("resource_type", {
   id: serial().primaryKey(),
-  parentId: bigint({ mode: "number", unsigned: true }).references(
-    (): AnyMySqlColumn => resourceType.id,
-  ),
+  parentId: bigint({ mode: "number", unsigned: true })
+    .references((): AnyMySqlColumn => resourceType.id)
+    .default(sql`NULL`),
   groupId: bigint({ mode: "number", unsigned: true }).references(
     () => resourcesGroups.id,
   ),
