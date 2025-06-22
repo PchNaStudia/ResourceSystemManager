@@ -4,6 +4,7 @@ import {
   Avatar,
   Box,
   Button,
+  Chip,
   IconButton,
   Link,
   Menu,
@@ -18,6 +19,7 @@ import LightModeIcon from "@mui/icons-material/LightMode";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import { useAuth } from "./AuthContext";
 import Logo from "@client/components/Logo";
+import { NavLink } from "react-router";
 
 const settings = ["Account", "Logout"];
 
@@ -63,6 +65,18 @@ const ResponsiveAppBar = () => {
             >
               <Logo height={64} withText />
             </Link>
+            <Stack direction="row" spacing={2} alignItems="center">
+              {user && (
+                <>
+                  <Chip
+                    component={NavLink}
+                    to="/reservations"
+                    clickable
+                    label="Reservation"
+                  />
+                </>
+              )}
+            </Stack>
           </Stack>
 
           <Stack direction="row" spacing={2} alignItems="center">

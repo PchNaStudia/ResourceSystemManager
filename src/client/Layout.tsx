@@ -2,12 +2,9 @@ import React from "react";
 import { Box } from "@mui/material";
 import ResponsiveAppBar from "./ResponsiveAppBar";
 import Footer from "./Footer";
+import { Outlet } from "react-router";
 
-type LayoutProps = {
-  body: React.ReactNode;
-};
-
-const Layout = ({ body }: LayoutProps) => {
+const Layout = () => {
   return (
     <Box
       display="flex"
@@ -24,7 +21,7 @@ const Layout = ({ body }: LayoutProps) => {
         display="flex"
         flexDirection="column"
       >
-        {body}
+        <Outlet />
       </Box>
       <Footer />
     </Box>

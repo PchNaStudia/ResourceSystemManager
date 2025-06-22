@@ -3,6 +3,8 @@ import {
   ReserveSchema,
   GetReservationsSchema,
   ReservationApprovalSchema,
+  GetReservationSchema,
+  ReserveResponseSchema,
 } from "@common/ApiTypes";
 import db, { reservation, resource, resourceToReservation } from "@server/db";
 import { and, eq, gt, gte, inArray, lt, lte, or, sql } from "drizzle-orm";
@@ -47,6 +49,50 @@ reservationsRouter.get("/", async (req, res) => {
       }
     }
     res.json(GetReservationsSchema.parse(Object.values(all)));
+  } catch {
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+reservationsRouter.get("/:id", async (req, res) => {
+  try {
+    const reservationId = z.coerce.number().int().parse(req.params.id);
+    const canViewAll =
+      !req.resourceAccess || req.resourceAccess.reserveLevel === "APPROVE";
+    const reservations = await db
+      .select({ reservation, resource })
+      .from(reservation)
+      .innerJoin(
+        resourceToReservation,
+        eq(reservation.id, resourceToReservation.reservationId),
+      )
+      .innerJoin(resource, eq(resourceToReservation.resourceId, resource.id))
+      .where(
+        canViewAll
+          ? and(
+              eq(reservation.groupId, req.resourceGroup!.id),
+              eq(reservation.id, reservationId),
+            )
+          : and(
+              eq(reservation.groupId, req.resourceGroup!.id),
+              eq(reservation.userId, req.user!.id),
+              eq(reservation.id, reservationId),
+            ),
+      );
+    if (reservations.length === 0) {
+      res.status(404).json({
+        error: "Reservation not found or you do not have permission to see it",
+      });
+      return;
+    }
+    const reserv: ReservationWithResources = {
+      reservation: reservations[0].reservation,
+      resources: [reservations[0].resource],
+    };
+    for (const res of reservations.slice(1)) {
+      reserv.resources.push(res.resource);
+    }
+    res.json(GetReservationSchema.parse(Object.values(reserv)));
   } catch {
     res.status(500).json({ error: "Internal server error" });
   }
@@ -225,7 +271,7 @@ reservationsRouter.post("/", async (req, res) => {
           reservationId: reservationId.id,
         })),
       );
-      res.status(201).json({ reservationId });
+      res.status(201).json(ReserveResponseSchema.parse({ reservationId }));
     });
   } catch {
     res.status(500).json({ error: "Internal server error" });

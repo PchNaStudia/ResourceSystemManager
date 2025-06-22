@@ -1,7 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import Routes from "./Routes";
-import Layout from "./Layout";
 import AuthProvider from "@client/AuthContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import theme from "@client/theme";
@@ -15,7 +14,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
       <AuthProvider>
         <ThemeProvider theme={theme}>
           <CssBaseline enableColorScheme />
-          <Layout body={<Routes />} />
+          <Routes />
         </ThemeProvider>
       </AuthProvider>
     </QueryClientProvider>
