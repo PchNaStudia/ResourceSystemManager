@@ -158,9 +158,9 @@ reservationsRouter.post("/", async (req, res) => {
       return;
     }
     const reserveData = ReserveSchema.parse(req.body);
-    await db.transaction(async (tx) => {
+    const id = await db.transaction(async (tx) => {
       await tx.execute(
-        sql`SELECT * FROM ${resource} WHERE ${resource.id} IN (${reserveData.resources}) AND ${resource.groupId} = ${req.resourceGroup!.id} FOR UPDATE`,
+        sql`SELECT * FROM ${resource} WHERE ${resource.id} IN (${reserveData.resources.join(", ")}) AND ${resource.groupId} = ${req.resourceGroup!.id} FOR UPDATE`,
       );
       const resources = await tx
         .select()
@@ -240,7 +240,7 @@ reservationsRouter.post("/", async (req, res) => {
             };
           } else {
             // confirmed reservation should reject all requested conflicting
-            await db
+            await tx
               .update(reservation)
               .set({
                 status: "REJECTED",
@@ -265,15 +265,17 @@ reservationsRouter.post("/", async (req, res) => {
       const reservationId = (
         await tx.insert(reservation).values(values).$returningId()
       )[0];
-      tx.insert(resourceToReservation).values(
+      await tx.insert(resourceToReservation).values(
         reserveData.resources.map((v) => ({
           resourceId: v,
           reservationId: reservationId.id,
         })),
       );
-      res.status(201).json(ReserveResponseSchema.parse({ reservationId }));
+      return reservationId;
     });
-  } catch {
+    res.status(201).json(ReserveResponseSchema.parse(id));
+  } catch (e) {
+    console.error(e);
     res.status(500).json({ error: "Internal server error" });
   }
 });

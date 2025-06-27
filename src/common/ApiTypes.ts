@@ -41,7 +41,7 @@ export type ResourceAccess = z.infer<typeof ResourceAccessSchema>;
 export const ResourceGroupAccessSchema = z
   .object({
     resourceGroups: ResourceGroupTypeSchema,
-    resourcesAccess: ResourceAccessSchema,
+    resourcesAccess: ResourceAccessSchema.nullable(),
   })
   .strip();
 
@@ -99,22 +99,33 @@ export const ReservationSchema = z.object({
   startTime: z.coerce.date(),
   endTime: z.coerce.date(),
   reason: z.string().nullable(),
+  status: z.enum(["REQUESTED", "CONFIRMED", "REJECTED", "CANCELED"]),
 });
 
-export const ReserveSchema = z.object({
-  resources: z.array(z.number()),
-  startTime: z.coerce.date(),
-  endTime: z.coerce.date(),
-  reason: z.string().nullable(),
-  force: z.boolean().default(false),
-});
+export const ReserveSchema = z
+  .object({
+    resources: z.array(z.number()).min(1),
+    startTime: z.coerce.date().refine((data) => data > new Date(), {
+      message: "Start time must be after now",
+    }),
+    endTime: z.coerce.date(),
+    reason: z.string().nullable(),
+    force: z.boolean().default(false),
+  })
+  .refine((data) => data.startTime < data.endTime, {
+    message: "Start time must be before end time",
+  });
 
 export const ReserveResponseSchema = z.object({
-  reservationId: z.coerce.number().int(),
+  id: z.coerce.number().int(),
+});
+
+export const NoResourcesReservationSchema = ReservationSchema.omit({
+  resources: true,
 });
 
 export const GetReservationSchema = z.object({
-  reservation: ReservationSchema.omit({ resources: true }),
+  reservation: NoResourcesReservationSchema,
   resources: z.array(ResourceSchema),
 });
 
@@ -130,16 +141,29 @@ export const ReservationApprovalSchema = z.object({
 });
 
 export const ResourceTypeCreateSchema = z.object({
-  parentId: z.number().optional(),
+  parentId: z.number().nullable(),
   groupId: z.number(),
   name: z.string().min(1),
-  shortName: z.string().optional(),
-  metadataSchema: z.any().optional(),
+  shortName: z.string().nullable(),
+  metadataSchema: z.any().nullable(),
 });
 
 export const ResourceTypeUpdateSchema = z.object({
-  parentId: z.number().optional(),
+  parentId: z.number().nullable(),
   name: z.string().min(1),
-  shortName: z.string().optional(),
-  metadataSchema: z.any().optional(),
+  shortName: z.string().nullable(),
+  metadataSchema: z.any().nullable(),
 });
+
+export const ResourceTypeGetSchema = z
+  .object({
+    id: z.number().int(),
+    parentId: z.number().int().nullable(),
+    groupId: z.number().int().nullable(),
+    name: z.string(),
+    shortName: z.string().nullable(),
+    metadataSchema: z.string().nullable(),
+  })
+  .strip();
+
+export const ResourceTypeGetListSchema = z.array(ResourceTypeGetSchema);

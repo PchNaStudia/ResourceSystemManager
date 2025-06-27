@@ -67,14 +67,16 @@ const ResponsiveAppBar = () => {
             </Link>
             <Stack direction="row" spacing={2} alignItems="center">
               {user && (
-                <>
-                  <Chip
-                    component={NavLink}
-                    to="/reservations"
-                    clickable
-                    label="Reservation"
-                  />
-                </>
+                <Chip
+                  component={NavLink}
+                  to="/reservations"
+                  clickable
+                  label="Reservation"
+                  sx={{
+                    backgroundColor: "primary.main",
+                    color: "primary.contrastText",
+                  }}
+                />
               )}
             </Stack>
           </Stack>

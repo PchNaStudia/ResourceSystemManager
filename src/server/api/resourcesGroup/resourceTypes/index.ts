@@ -4,6 +4,8 @@ import db, { resourceType } from "@server/db";
 import { eq, and } from "drizzle-orm";
 import {
   ResourceTypeCreateSchema,
+  ResourceTypeGetListSchema,
+  ResourceTypeGetSchema,
   ResourceTypeUpdateSchema,
 } from "@common/ApiTypes";
 
@@ -17,8 +19,9 @@ resourceTypeRouter.get("/", async (req, res) => {
       .select()
       .from(resourceType)
       .where(eq(resourceType.groupId, groupId));
-    res.json(result);
-  } catch {
+    res.json(ResourceTypeGetListSchema.parse(result));
+  } catch (e) {
+    console.error(e);
     res.status(500).json({ error: "Internal server error" });
   }
 });
@@ -38,7 +41,7 @@ resourceTypeRouter.get("/:id", async (req, res) => {
       return;
     }
 
-    res.json(result);
+    res.json(ResourceTypeGetSchema.parse(result));
   } catch {
     res.status(500).json({ error: "Internal server error" });
   }
