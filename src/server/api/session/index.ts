@@ -33,7 +33,8 @@ sessionRouter.get("/reservations", async (req, res) => {
       }
     }
     res.json(GetReservationsSchema.parse(Object.values(all)));
-  } catch {
+  } catch (e) {
+    console.error(e);
     res.status(500).json({ error: "Internal server error" });
   }
 });
